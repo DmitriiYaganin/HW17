@@ -17,17 +17,36 @@ director_ns = api.namespace('directors')
 genre_ns = api.namespace('genre')
 
 
-@movie_ns.route('/')
-class MoviesView(Resource):
+@director_ns.route('/')
+class DirectorsView(Resource):
     def get(self):
         director_id = request.args.get('director_id')
-        genre_id = request.args.get('genre_id')
         query = Movie.query
         if director_id:
             query = query.filter(Movie.director_id == director_id)
+        return MovieSchema(many=True).dump(Movie.query.all()), 200
+
+@genre_ns.route('/')
+class GenresView(Resource):
+    def get(self):
+        genre_id = request.args.get('genre_id')
+        query = Movie.query
         if genre_id:
             query = query.filter(Movie.genre_id == genre_id)
         return MovieSchema(many=True).dump(Movie.query.all()), 200
+
+
+# @movie_ns.route('/')
+# class MoviesView(Resource):
+#     def get(self):
+        # director_id = request.args.get('director_id')
+        # genre_id = request.args.get('genre_id')
+        # query = Movie.query
+        # if director_id:
+        #     query = query.filter(Movie.director_id == director_id)
+        # if genre_id:
+        #     query = query.filter(Movie.genre_id == genre_id)
+        # return MovieSchema(many=True).dump(Movie.query.all()), 200
 
 
     def post(self):
